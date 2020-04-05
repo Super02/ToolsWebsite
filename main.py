@@ -1,9 +1,11 @@
 from flask import Flask, request, render_template  
 import dotenv
 from login import login_pages
+from signup import signup_pages
 
 app = Flask(__name__)
 app.register_blueprint(login_pages)
+app.register_blueprint(signup_pages)
 
 print("Starting up")
 

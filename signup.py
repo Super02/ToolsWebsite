@@ -10,14 +10,22 @@ signup_pages = Blueprint('signup_pages',__name__)
 
 @signup_pages.route('/signup', methods=['GET', 'POST'])
 def signup_page():
-    if(request.method == 'POST'):
-        return signup(request.form['username'], request.form['password'])
-    elif(request.method == 'GET'):  
-        return render_template("signup.html")
+	if(request.method == 'POST'):
+		return signup(request.form['username'], request.form['password'])
+	elif(request.method == 'GET'):  
+		return render_template("signup.html")
 
 def signup(username : str, password : str):  
-    if username in get_fb_instance().child("users").get().each(): 
-        return render_template("showtext.html", title="signup failure", text="Username already taken")
-    else:
-        get_fb_instance.child("users").push("name": "", )
-        return render_template("showtext.html", title="signup success", text="You have successfuly signed up. This page is under construction. Please check back later.")
+	taken=False
+	for user in get_fb_instance().child("users").get().each():
+		print(user.key())
+		if(user.key()==username): taken=True # Change later for better integration
+	if taken:
+		return render_template("showtext.html", title="Signup failure", text="Username already taken")
+	else:
+		try:
+			get_fb_instance().child("users").update({username : str(ph.hash(password))})
+		except Exception as e:
+			print(e)
+			return render_template("showtext.html", title="Signup failure", text="An unknown error occured.")
+		return render_template("showtext.html", title="Signup success", text="You have successfuly signed up. This page is under construction. Please check back later.")
