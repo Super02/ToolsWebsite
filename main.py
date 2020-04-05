@@ -13,12 +13,13 @@ print("Starting up")
 @app.route('/')
 def index():
     try:
-        if session['user_id'] != None:
+        if session['user_id'] is not None:
             return 'Welcome to buylist.'
         else:
             return redirect(url_for('login_pages.login_page'))
     except KeyError:
         return redirect(url_for('login_pages.login_page'))
+
 
 if __name__ == '__main__':
     app.secret_key = 'super secret key'
