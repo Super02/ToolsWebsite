@@ -1,7 +1,9 @@
-from flask import Flask, request, render_template, Blueprint, session, abort
+from flask import Flask, request, render_template, Blueprint, session, abort, url_for, redirect
 from firebaseUtil import get_fb_instance
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
+from user_management import parseUser
+import json
 
 ph = PasswordHasher()
 
@@ -18,19 +20,19 @@ def login_page():
 
 def login(username: str, password: str):
     valid = False
-    print(ph.hash(password))
-    for user in get_fb_instance().child("users").get().each():
+    for user in get_fb_instance().child("users").get().each(): # Smarter implementation
         try:
-            if(user.key() == username and ph.verify(user.val(), password)):
+            if(user.key() == username and ph.verify(parseUser(user.val()).password, password)):
                 valid = True
         except VerifyMismatchError:
             pass
     if(valid):
-        # Add session.
-        return render_template(
-            "showtext.html",
-            title="Login success",
-            text="Welcome, you have successfuly logged in. This page is under construction. Please check back later.")
+        users = get_fb_instance().child("users").get().each()
+        for x in users:
+            if x.key() == username: 
+                user = parseUser(x.val())
+        session['user_id'] = user.id
+        return redirect(url_for("index"))
     elif(valid == False):
         return render_template(
             "showtext.html",

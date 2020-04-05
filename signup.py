@@ -1,7 +1,9 @@
-from flask import Flask, request, render_template, Blueprint, session, abort
+from flask import Flask, request, render_template, Blueprint, session, abort, redirect, url_for
 from firebaseUtil import get_fb_instance
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
+from user_management import createUserObject, parseUser
+import json
 
 ph = PasswordHasher()
 
@@ -16,16 +18,15 @@ def signup_page():
 		return render_template("signup.html")
 
 def signup(username : str, password : str):  
-	taken=False
-	for user in get_fb_instance().child("users").get().each():
-		print(user.key())
-		if(user.key()==username): taken=True # Change later for better integration
-	if taken:
+	users = get_fb_instance().child("users").get().each()
+	if users != None and [x for x in users if x.key() == username]:
 		return render_template("showtext.html", title="Signup failure", text="Username already taken")
 	else:
 		try:
-			get_fb_instance().child("users").update({username : str(ph.hash(password))})
+			user=createUserObject(username, str(ph.hash(password)), "Member")
+			get_fb_instance().child("users").update({username : json.dumps(user.__dict__)})
+			session['user_id'] = user.id
+			return redirect(url_for("index"))
 		except Exception as e:
 			print(e)
 			return render_template("showtext.html", title="Signup failure", text="An unknown error occured.")
-		return render_template("showtext.html", title="Signup success", text="You have successfuly signed up. This page is under construction. Please check back later.")
