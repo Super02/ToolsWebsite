@@ -5,7 +5,7 @@ from argon2.exceptions import VerifyMismatchError
 
 ph = PasswordHasher()
 
-signup_pages = Blueprint('signup_pages',__name__)
+signup_pages = Blueprint('signup_pages', __name__)
 
 
 @signup_pages.route('/signup', methods=['GET', 'POST'])
