@@ -1,8 +1,9 @@
 from flask import Flask, request, render_template, session, redirect, url_for
-import dotenv
+import dotenv, os
 from login import login_pages
 from signup import signup_pages
 from user_management import parseUser, getUsers
+from libgravatar import Gravatar
 
 app = Flask(__name__)
 app.register_blueprint(login_pages)
@@ -14,14 +15,18 @@ print("Starting up")
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if(request.method == 'POST'):
-        session['user_id'] = None
-        return redirect(url_for('login_pages.login_page'))
+        try:
+            if request.form['logout'] == 'Logout':
+                session['user_id'] = None
+                return redirect(url_for('login_pages.login_page'))
+        except KeyError:
+            return redirect(url_for("index"))
     else:
         try:
             users = getUsers()
             if session['user_id'] != None:
                 user = [x for x in users if parseUser(x).id == session['user_id']][0]
-                return render_template('index.html', user=parseUser(user))
+                return render_template('index.html', user=parseUser(user), gravatar=Gravatar(parseUser(user).email).get_image())
             else:
                 return redirect(url_for('login_pages.login_page'))
         except KeyError:
@@ -29,5 +34,5 @@ def index():
 
 
 if __name__ == '__main__':
-    app.secret_key = 'super secret key'
+    app.secret_key = os.environ['app_key']
     app.run(debug=True, host='localhost', use_reloader=True)

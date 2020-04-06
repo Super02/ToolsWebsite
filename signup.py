@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, Blueprint, session, abort, redirect, url_for
+from flask import Flask, request, render_template, Blueprint, session, abort, redirect, url_for, flash
 from firebaseUtil import get_fb_instance
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
@@ -12,21 +12,23 @@ signup_pages = Blueprint('signup_pages', __name__)
 
 @signup_pages.route('/signup', methods=['GET', 'POST'])
 def signup_page():
-    if(request.method == 'POST'):
-        return signup(request.form['username'], request.form['password'])
-    elif(request.method == 'GET'):
-        return render_template("signup.html")
+	if(request.method == 'POST'):
+		return signup(request.form['username'], request.form['password'], request.form['email'])
+	elif(request.method == 'GET'):
+		return render_template("signup.html")
 
-def signup(username : str, password : str):  
+def signup(username : str, password : str, email : str):  
 	users = getUsers()
-	if users != None and [x for x in users if x.key() == username]:
-		return render_template("showtext.html", title="Signup failure", text="Username already taken")
+	if users != None and [x for x in users if x.key() == username or parseUser(x).email == email]:
+		flash("Username or email already taken!", "error")
+		return redirect(url_for("signup_pages.signup_page"))
 	else:
 		try:
-			user=createUserObject(username, str(ph.hash(password)), "Member")
+			user=createUserObject(username, str(ph.hash(password)), 0, email)
 			get_fb_instance().child("users").update({username : json.dumps(user.__dict__)})
 			session['user_id'] = user.id
 			return redirect(url_for("index"))
 		except Exception as e:
 			print(e)
-			return render_template("showtext.html", title="Signup failure", text="An unknown error occured.")
+			flash("An unknown error occured!", "error")
+			return redirect(url_for("signup_pages.signup_page"))
