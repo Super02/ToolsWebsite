@@ -20,7 +20,8 @@ def login_page():
 
 def login(username: str, password: str):
     valid = False
-    for user in get_fb_instance().child("users").get().each(): # Smarter implementation
+    for user in get_fb_instance(
+    ).child("users").get().each():  # Smarter implementation
         try:
             if(user.key() == username and ph.verify(parseUser(user.val()).password, password)):
                 valid = True
@@ -29,7 +30,7 @@ def login(username: str, password: str):
     if(valid):
         users = get_fb_instance().child("users").get().each()
         for x in users:
-            if x.key() == username: 
+            if x.key() == username:
                 user = parseUser(x.val())
         session['user_id'] = user.id
         return redirect(url_for("index"))
