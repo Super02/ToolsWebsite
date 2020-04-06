@@ -34,8 +34,8 @@ def login(username: str, password: str):
             return redirect(url_for("index"))
         else:
             return render_template(
-            "showtext.html",
-            title="Login failure",
-            text="Password or username incorrect!")
+                "showtext.html",
+                title="Login failure",
+                text="Password or username incorrect!")
     except VerifyMismatchError:
         pass

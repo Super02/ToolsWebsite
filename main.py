@@ -19,8 +19,9 @@ def index():
     else:
         try:
             users = getUsers()
-            if session['user_id'] != None:
-                user = [x for x in users if parseUser(x).id == session['user_id']][0]
+            if session['user_id'] is not None:
+                user = [x for x in users if parseUser(
+                    x).id == session['user_id']][0]
                 return render_template('index.html', user=parseUser(user))
             else:
                 return redirect(url_for('login_pages.login_page'))
