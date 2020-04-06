@@ -27,6 +27,7 @@ def index():
         except KeyError:
             return redirect(url_for('login_pages.login_page'))
 
+
 if __name__ == '__main__':
     app.secret_key = 'super secret key'
     app.run(debug=True, host='localhost', use_reloader=True)

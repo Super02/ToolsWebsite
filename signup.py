@@ -12,10 +12,10 @@ signup_pages = Blueprint('signup_pages', __name__)
 
 @signup_pages.route('/signup', methods=['GET', 'POST'])
 def signup_page():
-	if(request.method == 'POST'):
-		return signup(request.form['username'], request.form['password'])
-	elif(request.method == 'GET'):  
-		return render_template("signup.html")
+    if(request.method == 'POST'):
+        return signup(request.form['username'], request.form['password'])
+    elif(request.method == 'GET'):
+        return render_template("signup.html")
 
 def signup(username : str, password : str):  
 	users = getUsers()

@@ -4,12 +4,14 @@ from firebaseUtil import get_fb_instance
 import pyrebase
 from json import JSONDecodeError
 
+
 class User:
-    def __init__(self, id : str, username : str, password : str, role : str):
+    def __init__(self, id: str, username: str, password: str, role: str):
         self.id = id
         self.username = username
         self.password = password
         self.role = role
+
     def __repr__(self):
         return f'<User: {self.username}>'
 
