@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, Blueprint, session, abort, re
 from firebaseUtil import get_fb_instance
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
-from user_management import createUserObject, parseUser
+from user_management import createUserObject, parseUser, getUsers
 import json
 
 ph = PasswordHasher()
@@ -18,7 +18,7 @@ def signup_page():
 		return render_template("signup.html")
 
 def signup(username : str, password : str):  
-	users = get_fb_instance().child("users").get().each()
+	users = getUsers()
 	if users != None and [x for x in users if x.key() == username]:
 		return render_template("showtext.html", title="Signup failure", text="Username already taken")
 	else:

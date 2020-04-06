@@ -19,22 +19,23 @@ def login_page():
 
 
 def login(username: str, password: str):
-    valid = False
-    for user in get_fb_instance().child("users").get().each(): # Smarter implementation
-        try:
-            if(user.key() == username and ph.verify(parseUser(user.val()).password, password)):
-                valid = True
-        except VerifyMismatchError:
-            pass
-    if(valid):
-        users = get_fb_instance().child("users").get().each()
-        for x in users:
-            if x.key() == username: 
-                user = parseUser(x.val())
-        session['user_id'] = user.id
-        return redirect(url_for("index"))
-    elif(valid == False):
+    users = get_fb_instance().child("users").get().each()
+    try:
+        user = [x for x in users if parseUser(x.val()).username == username][0]
+    except IndexError:
         return render_template(
             "showtext.html",
             title="Login failure",
             text="Password or username incorrect!")
+    user = parseUser(user.val())
+    try:
+        if(user and ph.verify(user.password, password)):
+            session['user_id'] = user.id
+            return redirect(url_for("index"))
+        else:
+            return render_template(
+            "showtext.html",
+            title="Login failure",
+            text="Password or username incorrect!")
+    except VerifyMismatchError:
+        pass
