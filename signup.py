@@ -17,6 +17,7 @@ def signup_page():
 	elif(request.method == 'GET'):
 		return render_template("signup.html")
 
+<<<<<<< HEAD
 def signup(username : str, password : str, email : str):  
 	users = getUsers()
 	if users != None and [x for x in users if x.key() == username or parseUser(x).email == email]:
@@ -32,3 +33,26 @@ def signup(username : str, password : str, email : str):
 			print(e)
 			flash("An unknown error occured!", "error")
 			return redirect(url_for("signup_pages.signup_page"))
+=======
+
+def signup(username: str, password: str):
+    users = getUsers()
+    if users is not None and [x for x in users if x.key() == username]:
+        return render_template(
+            "showtext.html",
+            title="Signup failure",
+            text="Username already taken")
+    else:
+        try:
+            user = createUserObject(username, str(ph.hash(password)), "Member")
+            get_fb_instance().child("users").update(
+                {username: json.dumps(user.__dict__)})
+            session['user_id'] = user.id
+            return redirect(url_for("index"))
+        except Exception as e:
+            print(e)
+            return render_template(
+                "showtext.html",
+                title="Signup failure",
+                text="An unknown error occured.")
+>>>>>>> e1c83a2cbb2ce78d42112233cd8e50e3df793f4a
