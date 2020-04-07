@@ -1,5 +1,5 @@
 pyrebase
 python-dotenv
 flask
-argon2
+argon2-cffi
 gunicorn
