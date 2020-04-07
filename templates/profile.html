@@ -39,7 +39,11 @@
             Welcome, {{user.username}}
           </h1>
         <h2 class="subtitle">
-			You are user number #{{user.id}}
+      {% if user.role > 0 %}
+      You are user number #{{user.id}}. <br>You have an access level of: {{ user.role }}
+      {%else%}
+      You are user number #{{user.id}}
+      {%endif%}
       </h2>
       <input type="submit" class="button is-info" name="logout" value="Logout">
       <input type="submit" class="button is-danger is-outlined" name="delete" value="Delete profile">
@@ -65,7 +69,7 @@
         <article class="tile is-child notification is-info">
           <p class="title">Users: {{ data|length+1 }}</p>
           {% if user.role > 15 %}
-          <input class="input" type="text" name="delete_username" placeholder="ID of user to delete.">
+          <input class="input" type="text" name="delete_username" placeholder="ID of user to select.">
           <input type="submit" class="button is-warning" name="delete_user" value="Delete this user">
           {% endif %}
           <input type="button" class="button is-link" onclick="window.location.href = '/profile/{{ user.id }}'" value="Refresh">
