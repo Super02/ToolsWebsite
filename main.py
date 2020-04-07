@@ -10,7 +10,7 @@ app.register_blueprint(login_pages)
 app.register_blueprint(signup_pages)
 app.register_blueprint(profile_pages)
 
-print("Starting up")
+app.secret_key = os.environ['app_key']
 
 @app.before_request
 def before_request_func():
@@ -34,5 +34,4 @@ def index():
         return redirect(url_for('login_pages.login_page'))
 
 if __name__ == '__main__':
-    app.secret_key = os.environ['app_key']
     app.run(debug=True, host='localhost', use_reloader=True)
