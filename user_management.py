@@ -86,7 +86,10 @@ def getNotes(id):
         notes = get_fb_instance().child("notes").get().each()
         if(notes != None):
             note = [x for x in notes if str(x.key()) == str(id)][0]
-            return note.val()[1:-1]
+            if(note.val() != None):
+                return note.val()[1:-1]
+            else:
+                return ""
         else:
             return ""
     except IndexError:
