@@ -1,5 +1,4 @@
 pyrebase
 python-dotenv
 flask
-os
 argon2
