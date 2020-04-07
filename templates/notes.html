@@ -1,0 +1,50 @@
+  
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notes</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+
+<body>
+  <section class="hero is-info is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column is-half">
+			<h1 class="title is-1 has-text-black">Notes</h1>
+            <form method="POST">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+						{% if messages %}
+							{% for category, message in messages %}
+							<div class="notification is-danger">
+								<button class="delete", name="removeFlash"></button>
+								{{ message }}
+							  </div>
+							{% endfor %}
+						{% endif %}
+					{% endwith %}
+                {% if user.id != session.id %}
+                <h1 class="title">
+                  <span onclick="window.location.href = '/profile/{{ session.id }}'" style="color: #00000021">{{ session.username }}, you are viewing this page as {{ user.username }}.</span> 
+                  <span onclick="window.location.href = '/profile/{{ session.id }}'" style="color: rgba(0, 0, 255, 0.267)">(return)</span>
+                </h1>
+                {% endif %}
+                <textarea class="textarea" placeholder="Type your notes here. And remember to press save." rows="10" name="notes">{{ notes }}</textarea>
+                <input type="submit" class="button is-info" name="save" value="Save">
+                <input type="button" class="button is-link" onclick="window.location.href = '/profile/{{ user.id }}'" value="Return">
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+
+</html>

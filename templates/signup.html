@@ -10,7 +10,6 @@
 	  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
 	  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 	</head>
-	
 	<body>
 	  <section class="hero is-info is-fullheight">
 		<div class="hero-body">
@@ -19,6 +18,16 @@
 			  <div class="column is-half">
 				<h1 class="title is-1 has-text-black">Signup</h1>
 				<form method="POST">
+					{% with messages = get_flashed_messages(with_categories=true) %}
+						{% if messages %}
+							{% for category, message in messages %}
+							<div class="notification is-danger">
+								<button class="delete", name="removeFlash"></button>
+								{{ message }}
+							  </div>
+							{% endfor %}
+						{% endif %}
+					{% endwith %}
 					<div class="field">
 						<label class="label">Email</label>
 						<p class="control has-icons-left">

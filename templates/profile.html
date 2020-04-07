@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
+  <body>
+	<form method="POST">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+						{% if messages %}
+							{% for category, message in messages %}
+							<div class="notification is-danger">
+								<button class="delete", name="removeFlash"></button>
+								{{ message }}
+							  </div>
+							{% endfor %}
+						{% endif %}
+					{% endwith %}
+    <section class="hero is-success is-fullheight">
+      <div class="hero-body">
+        <div class="container">
+			<style>
+				img {
+			border-radius: 50%;
+			}
+      </style>
+      {% if user.id != session.id %}
+      <h1 class="title">
+        <span onclick="window.location.href = '/profile/{{ session.id }}'" style="color: #00000021">{{ session.username }}, you are viewing this page as {{ user.username }}.</span> 
+        <span onclick="window.location.href = '/profile/{{ session.id }}'" style="color: rgba(0, 0, 255, 0.267)">(return)</span>
+      </h1>
+      {% endif %}
+      <img style="vertical-align:right" src={{ gravatar }}/>
+      {% if user.role < 10 %}
+          <h1 class="title">
+            Welcome, {{user.username}}
+          </h1>
+        <h2 class="subtitle">
+			You are user number #{{user.id}}
+      </h2>
+      <input type="submit" class="button is-info" name="logout" value="Logout">
+      <input type="submit" class="button is-danger is-outlined" name="delete" value="Delete profile">
+      <input type="submit" class="button is-info" name="notes" value="Notes">
+      {% else %}
+          <h1 class="title">
+            Welcome, <span style="color: #ff0000">{{ user.username }}</span>
+          </h1>
+        <h2 class="subtitle">
+      You are user number #{{user.id}}. <br>You have an access level of: {{ user.role }}
+      </h2>
+      <input type="submit" class="button is-info" name="logout" value="Logout">
+      <input type="submit" class="button is-danger is-outlined" name="delete" value="Delete profile">
+      <input type="submit" class="button is-warning" name="deleteall" value="Delete all profiles">
+      <input type="submit" class="button is-info" name="notes" value="Notes">
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-info">
+          <p class="title">Users: {{ data|length+1 }}</p>
+          <input class="input" type="text" name="delete_username" placeholder="ID of user to delete.">
+          <input type="submit" class="button is-warning" name="delete_user" value="Delete this user">
+          <input type="button" class="button is-link" onclick="window.location.href = '/profile/{{ user.id }}'" value="Refresh">
+      <table class = "table">
+        <thead>
+           <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>ID</th>
+              <th>Role</th>
+           </tr>
+        </thead>
+        <tbody>
+          {% for data in usersList %}
+           <tr>
+              <td>{{ data.username }}</td>
+              <td>{{ data.email }}</td>
+              <td style="color: blue" onclick="window.location.href = '/profile/{{ data.id }}'">{{ data.id }} (Visit)</td>
+              <td>{{ data.role }}</td>
+           </tr>
+           {% endfor %}
+        </tbody>
+     </table>
+      {% endif %}
+		  </form>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
