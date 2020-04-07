@@ -3,3 +3,4 @@ python-dotenv
 flask
 argon2-cffi
 gunicorn
+libgravatar
