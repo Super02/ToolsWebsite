@@ -2,3 +2,4 @@ pyrebase
 python-dotenv
 flask
 argon2
+gunicorn
