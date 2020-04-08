@@ -32,7 +32,9 @@ def signup(username: str, password: str, email: str):
             if(float(get_fb_instance().child("delay").get().val()) + 10 < float(time.time())):
                 get_fb_instance().update({"delay": str(time.time())})
             else:
-                flash("Too many users are signing up right now! Please try again later.", "error")
+                flash(
+                    "Too many users are signing up right now! Please try again later.",
+                    "error")
                 return redirect(url_for("signup_pages.signup_page"))
         else:
             get_fb_instance().update({"delay": str(time.time())})

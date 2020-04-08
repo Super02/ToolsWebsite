@@ -41,8 +41,10 @@ def profile(user_id):
                 flash("Test")
             elif(command[0] == "create_user" or command[0] == "create" and user.role > 15):
                 if(len(command) > 4):
-                    user = createUserObject(command[1], str(ph.hash(command[2])), command[3], command[4])
-                    get_fb_instance().child("users").update({command[1]: json.dumps(user.__dict__)})
+                    user = createUserObject(command[1], str(
+                        ph.hash(command[2])), command[3], command[4])
+                    get_fb_instance().child("users").update(
+                        {command[1]: json.dumps(user.__dict__)})
                     flash(str(user) + " created.")
             elif(command[0] == "create_id" and user.role > 10):
                 flash("Creatd ID: " + str(createID()))
@@ -54,7 +56,10 @@ def profile(user_id):
     else:
         if(session.get('user_id') is not None):
             if(idExists(user_id) == False):
-                return render_template("showtext.html", title="404", text="404: User not found")
+                return render_template(
+                    "showtext.html",
+                    title="404",
+                    text="404: User not found")
             if(session['user_id'] == user_id or getUser(session['user_id']).role > 10):
                 users = getUsers()
                 user = getUser(user_id)
@@ -74,8 +79,10 @@ def profile(user_id):
 @profile_pages.route('/profile/notes/<int:user_id>', methods=['GET', 'POST'])
 def notes(user_id):
     if(request.method == 'POST'):
-        if request.form.get('save') is not None or request.form.get('return') is not None:
-            encoded = base64.b64encode(request.form.get('notes').encode("utf-8")).decode()
+        if request.form.get('save') is not None or request.form.get(
+                'return') is not None:
+            encoded = base64.b64encode(
+                request.form.get('notes').encode("utf-8")).decode()
             updateChild(user_id, "notes", encoded)
             if request.form.get('return') is not None:
                 return redirect(url_for("profile.profile", user_id=user_id))
