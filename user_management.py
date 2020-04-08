@@ -3,7 +3,8 @@ from collections import namedtuple
 from firebaseUtil import get_fb_instance
 import pyrebase
 from json import JSONDecodeError
-import time, base64
+import time
+import base64
 
 
 class User:
@@ -142,6 +143,7 @@ def userExists(session):
         exists = len([x for x in users if str(
             parseUser(x).id) == str(user_id)]) > 0
         return exists
+
 
 def idExists(user_id):
     if(len([x for x in getUsers() if str(parseUser(x).id) == str(user_id)]) != 0):
