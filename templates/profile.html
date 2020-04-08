@@ -9,19 +9,23 @@
   </head>
   <body>
 	<form method="POST">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-						{% if messages %}
-							{% for category, message in messages %}
-							<div class="notification is-danger">
-								<button class="delete", name="removeFlash"></button>
-								{{ message }}
-							  </div>
-							{% endfor %}
-						{% endif %}
-					{% endwith %}
     <section class="hero is-success is-fullheight">
       <div class="hero-body">
         <div class="container">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+            {% if category == "error" %}
+            <div class="notification is-danger">
+              {%else%}
+              <div class="notification is-primary">
+                {%endif%}
+              <button class="delete", name="removeFlash"></button>
+              {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 			<style>
 				img {
 			border-radius: 50%;
@@ -46,7 +50,6 @@
       {%endif%}
       </h2>
       <input type="submit" class="button is-info" name="logout" value="Logout">
-      <input type="submit" class="button is-danger is-outlined" name="delete" value="Delete profile">
       <input type="submit" class="button is-info" name="notes" value="Notes">
       {% else %}
           <h1 class="title">
@@ -60,17 +63,22 @@
       You are user number #{{user.id}}. <br>You have an access level of: {{ user.role }}
       </h2>
       <input type="submit" class="button is-info" name="logout" value="Logout">
-      <input type="submit" class="button is-danger is-outlined" name="delete" value="Delete profile">
-      {% if user.role > 15 %}
-      <input type="submit" class="button is-warning" name="deleteall" value="Delete all profiles">
-      {% endif %}
       <input type="submit" class="button is-info" name="notes" value="Notes">
       <div class="tile is-parent">
         <article class="tile is-child notification is-info">
-          <p class="title">Users: {{ data|length+1 }}</p>
+          <p class="title">Users: {{ usersList|length }}</p>
           {% if user.role > 15 %}
-          <input class="input" type="text" name="delete_username" placeholder="ID of user to select.">
-          <input type="submit" class="button is-warning" name="delete_user" value="Delete this user">
+          <input class="input" type="text" name="command" placeholder=":command" onkeypress="handle(event)">
+          <input type="submit" class="button is-warning" name="execute" id="execute" value="Execute">
+          <script>
+            function handle(e){
+                if(e.keyCode === 13){
+                    e.preventDefault();
+                    document.getElementById("execute").click()
+                    
+                }
+            }
+        </script>
           {% endif %}
           <input type="button" class="button is-link" onclick="window.location.href = '/profile/{{ user.id }}'" value="Refresh">
       <table class = "table">
