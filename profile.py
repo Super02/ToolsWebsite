@@ -3,6 +3,7 @@ from user_management import parseUser, getUsers, deleteUser, getUser, updateChil
 from libgravatar import Gravatar
 from firebaseUtil import get_fb_instance
 import json
+import base64
 
 profile_pages = Blueprint('profile', __name__)
 
@@ -50,7 +51,8 @@ def profile(user_id):
 def notes(user_id):
     if(request.method == 'POST'):
         if request.form.get('save') is not None:
-            updateChild(user_id, "notes", request.form.get('notes'))
+            encoded = base64.b64encode(request.form.get('notes').encode("utf-8")).decode()
+            updateChild(user_id, "notes", encoded)
             return render_template(
                 "notes.html",
                 user=getUser(user_id),
@@ -62,6 +64,7 @@ def notes(user_id):
     else:
         if(session.get('user_id') is not None):
             if(session['user_id'] == user_id or getUser(session['user_id']).role > 10):
+                print(getNotes(user_id))
                 return render_template(
                     "notes.html",
                     user=getUser(user_id),

@@ -3,7 +3,7 @@ from collections import namedtuple
 from firebaseUtil import get_fb_instance
 import pyrebase
 from json import JSONDecodeError
-import time
+import time, base64
 
 
 class User:
@@ -42,7 +42,7 @@ def parseUser(data):  # Smarter implementation
             data["notes"])
     elif(isinstance(data, User)):
         return data
-    elif(str(isinstance(data, "<class 'pyrebase.pyrebase.Pyre'>"))):
+    elif(str(type(data)) == "<class 'pyrebase.pyrebase.Pyre'>"):
         try:
             return parseUser(data.val())
         except AttributeError as e:
@@ -125,7 +125,8 @@ def getNotes(id):
         if(notes is not None):
             note = [x for x in notes if str(x.key()) == str(id)][0]
             if(note.val() is not None):
-                return note.val()[1:-1]
+                note = base64.b64decode(note.val()[1:-1]).decode()
+                return note
             else:
                 return ""
         else:
