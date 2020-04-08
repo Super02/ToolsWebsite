@@ -142,3 +142,9 @@ def userExists(session):
         exists = len([x for x in users if str(
             parseUser(x).id) == str(user_id)]) > 0
         return exists
+
+def idExists(user_id):
+    if(len([x for x in getUsers() if str(parseUser(x).id) == str(user_id)]) != 0):
+        return True
+    else:
+        return False

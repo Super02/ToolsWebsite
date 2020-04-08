@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, Blueprint, session, abort, url_for, redirect, flash, jsonify
-from user_management import parseUser, getUsers, deleteUser, getUser, updateChild, getNotes, userExists, createUserObject, createID
+from user_management import parseUser, getUsers, deleteUser, getUser, updateChild, getNotes, userExists, createUserObject, createID, idExists
 from libgravatar import Gravatar
 from firebaseUtil import get_fb_instance
 import json
@@ -53,6 +53,8 @@ def profile(user_id):
         return redirect(url_for('profile.profile', user_id=user_id))
     else:
         if(session.get('user_id') is not None):
+            if(idExists(user_id) == False):
+                return render_template("showtext.html", title="404", text="404: User not found")
             if(session['user_id'] == user_id or getUser(session['user_id']).role > 10):
                 users = getUsers()
                 user = getUser(user_id)
