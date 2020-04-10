@@ -21,36 +21,9 @@ def profile(user_id):
         elif request.form.get('removeFlash') is not None:
             return redirect(url_for("profile.profile", user_id=user_id))
         elif request.form.get('execute') is not None:
-            user = getUser(user_id)
+            user = getUser(session['user_id'])
             command = request.form.get('command').split(" ")
-            if(command[0][0] == ":"):
-                command[0] = command[0][1:]
-            if(command[0] == "delete_user" or command[0] == "delete" and user.role > 20):
-                if(len(command) > 2):
-                    flash(deleteUser(command[1], command[2]), "error")
-                elif(len(command) > 1):
-                    flash(deleteUser(command[1], "id"), "error")
-            elif(command[0] == "show_db" and user.role > 25):
-                data = get_fb_instance().get().val()
-                return jsonify(data)
-            elif(command[0] == "delete_all" and user.role > 30):
-                for x in getUsers():
-                    if(parseUser(x).id != int(user_id)):
-                        flash(deleteUser(parseUser(x).username), "error")
-            elif(command[0] == "test" and user.role > 5):
-                flash("Test")
-            elif(command[0] == "create_user" or command[0] == "create" and user.role > 15):
-                if(len(command) > 4):
-                    user = createUserObject(command[1], str(
-                        ph.hash(command[2])), command[3], command[4])
-                    get_fb_instance().child("users").update(
-                        {command[1]: json.dumps(user.__dict__)})
-                    flash(str(user) + " created.")
-            elif(command[0] == "create_id" and user.role > 10):
-                flash("Creatd ID: " + str(createID()))
-            elif(command[0] == "logout" and user.role > 5):
-                session['user_id'] = None
-                return redirect(url_for('login_pages.login_page'))
+            command_handler(command, user)
 
         return redirect(url_for('profile.profile', user_id=user_id))
     else:
@@ -74,7 +47,38 @@ def profile(user_id):
             "showtext.html",
             title="401",
             text="401: User not allowed")
+def delete_all():
+    for x in getUsers():
+        if(parseUser(x).id != int(user_id)):
+            deleteUser(parseUser(x).username)
 
+def command_handler(command, user):
+     if(command[0][0] == ":"):
+            command[0] = command[0][1:]
+            if(command[0] == "delete_user" or command[0] == "delete" and user.role > 20):
+                if(len(command) > 2):
+                    flash(deleteUser(command[1], command[2]), "error")
+                elif(len(command) > 1):
+                    flash(deleteUser(command[1], "id"), "error")
+            elif(command[0] == "show_db" and user.role > 25):
+                data = get_fb_instance().get().val()
+                return jsonify(data)
+            elif(command[0] == "delete_all" and user.role > 30):
+                delete_all()
+            elif(command[0] == "test" and user.role > 5):
+                flash("Test")
+            elif(command[0] == "create_user" or command[0] == "create" and user.role > 15):
+                if(len(command) > 4):
+                    user = createUserObject(command[1], str(
+                        ph.hash(command[2])), command[3], command[4])
+                    get_fb_instance().child("users").update(
+                        {command[1]: json.dumps(user.__dict__)})
+                    flash(str(user) + " created.")
+            elif(command[0] == "create_id" and user.role > 10):
+                flash("Creatd ID: " + str(createID()))
+            elif(command[0] == "logout" and user.role > 5):
+                session['user_id'] = None
+                return redirect(url_for('login_pages.login_page'))
 
 @profile_pages.route('/profile/notes/<int:user_id>', methods=['GET', 'POST'])
 def notes(user_id):

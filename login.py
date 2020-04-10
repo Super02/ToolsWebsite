@@ -40,4 +40,5 @@ def login(username: str, password: str):
             flash("Username or password incorrect.", "error")
             return redirect(url_for("login_pages.login_page"))
     except VerifyMismatchError:
-        pass
+        flash("Username or password incorrect.", "error")
+        return redirect(url_for("login_pages.login_page"))

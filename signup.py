@@ -24,7 +24,7 @@ def signup_page():
         else:
             return redirect(url_for("signup_pages.signup_page"))
     elif(request.method == 'GET'):
-        return render_template("signup.html")
+        return render_template("signup.html", key=os.environ['h_key'])
 
 def signup(username: str, password: str, email: str, token):
     data = { 'secret': H_SECRET_KEY, 'response': token }
