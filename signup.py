@@ -3,13 +3,18 @@ from firebaseUtil import get_fb_instance
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from user_management import createUserObject, parseUser, getUsers, getUser
-import time, os, requests, re, json
+import time
+import os
+import requests
+import re
+import json
 
 ph = PasswordHasher()
 
 signup_pages = Blueprint('signup_pages', __name__)
 H_SECRET_KEY = os.environ['h_secret']
 H_VERIFY_URL = "https://hcaptcha.com/siteverify"
+
 
 @signup_pages.route('/signup', methods=['GET', 'POST'])
 def signup_page():
@@ -25,20 +30,22 @@ def signup_page():
     elif(request.method == 'GET'):
         return render_template("signup.html")
 
+
 def signup(username: str, password: str, email: str, token):
-    data = { 'secret': H_SECRET_KEY, 'response': token }
+    data = {'secret': H_SECRET_KEY, 'response': token}
     response = requests.post(url=H_VERIFY_URL, data=data)
     success = response.json()['success']
     if(not re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email)):
         flash("Error! Email invalid.")
         return redirect(url_for("signup_pages.signup_page"))
-    bypass = getUser(session.get('user_id')).role < 30 if session.get('user_id') != None else True
+    bypass = getUser(session.get('user_id')).role < 30 if session.get(
+        'user_id') is not None else True
     if(not success and bypass):
         flash("Error! You did not complete our captcha!")
         return redirect(url_for("signup_pages.signup_page"))
     users = getUsers()
     if(users is not None):
-        if(get_fb_instance().child("delay").get().val() != None):
+        if(get_fb_instance().child("delay").get().val() is not None):
             if(float(get_fb_instance().child("delay").get().val()) + 10 < float(time.time())):
                 get_fb_instance().update({"delay": str(time.time())})
             else:
