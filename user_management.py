@@ -15,13 +15,15 @@ class User:
             password: str,
             role: int,
             email: str,
-            notes: str):
+            notes: str,
+            deletable: bool):
         self.id = id
         self.username = username
         self.password = password
         self.role = role
         self.email = email
         self.notes = notes
+        self.deletable = deletable
 
     def __repr__(self):
         return f'<User: {self.username}>'
@@ -40,7 +42,8 @@ def parseUser(data):  # Smarter implementation
             data["password"],
             data["role"],
             data["email"],
-            data["notes"])
+            data["notes"],
+            data["deletable"])
     elif(isinstance(data, User)):
         return data
     elif(str(type(data)) == "<class 'pyrebase.pyrebase.Pyre'>"):
@@ -53,12 +56,12 @@ def parseUser(data):  # Smarter implementation
                         " was given expected type JSON or PyreBase"))
 
 
-def createUserObject(username, password, role, email, *id):
+def createUserObject(username, password, role: int, email, *id):
     ID = createID()
     if(len(id) == 0):
-        return User(ID, username, password, role, email, "")
+        return User(int(ID), username, password, int(role), email, "", True)
     else:
-        return User(id[0], username, password, role, email, "")
+        return User(int(id[0]), username, password, int(role), email, "", True)
 
 
 def getUsers():
@@ -71,29 +74,37 @@ def deleteUser(data, *method):
         if(len(method) == 0 or method[0] == "username"):
             user = [x for x in users if parseUser(
                 x).username == data or parseUser(x).email == data][0]
-            get_fb_instance().child("users").child(parseUser(user).username).remove()
-            get_fb_instance().child("notes").child(parseUser(user).id).remove()
+            user = parseUser(user)
+            if(not user.deletable):
+                return "Error! User protected from deletion."
+            get_fb_instance().child("users").child(user.username).remove()
+            get_fb_instance().child("notes").child(user.id).remove()
             return "User succesfuly deleted"
         elif(method[0] == "id"):
             user = [x for x in users if str(parseUser(x).id) == str(data)][0]
-            get_fb_instance().child("users").child(parseUser(user).username).remove()
+            user = parseUser(user)
+            if(not user.deletable):
+                return "Error! User protected from deletion."
+            get_fb_instance().child("users").child(user.username).remove()
             get_fb_instance().child("notes").child(data).remove()
             return "User succesfuly deleted"
-    except IndexError:
+                
+    except IndexError as e:
+        print(str(e))
         return "Error: User not found"
 
 
 def getUser(id):
     try:
         users = get_fb_instance().child("users").get().each()
-        return parseUser([x for x in users if parseUser(x).id == id][0])
+        return parseUser([x for x in users if parseUser(x).id == int(id)][0])
     except IndexError:
         return None
 
 
 def getRawUser(id):
     users = getUsers()
-    return [x for x in users if parseUser(x).id == id][0]
+    return [x for x in users if parseUser(x).id == int(id)][0]
 
 
 def updateUser(id, user_object):
@@ -140,13 +151,23 @@ def userExists(session):
     if(session.get('user_id') is not None):
         user_id = session.get('user_id')
         users = getUsers()
-        exists = len([x for x in users if str(
-            parseUser(x).id) == str(user_id)]) > 0
-        return exists
+        if(not users == None):
+            exists = len([x for x in users if str(parseUser(x).id) == str(user_id)]) > 0
+            return exists
+        else:
+            return False
 
 
 def idExists(user_id):
     if(len([x for x in getUsers() if str(parseUser(x).id) == str(user_id)]) != 0):
         return True
+    else:
+        return False
+
+def checkID(user_id):
+    users = getUsers()
+    if(not users == None):
+        exists = len([x for x in users if str(parseUser(x).id) == str(user_id)]) > 0
+        return exists
     else:
         return False

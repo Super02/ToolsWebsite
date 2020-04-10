@@ -2,9 +2,8 @@ from flask import Flask, request, render_template, Blueprint, session, abort, re
 from firebaseUtil import get_fb_instance
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
-from user_management import createUserObject, parseUser, getUsers
-import json
-import time, os, requests
+from user_management import createUserObject, parseUser, getUsers, getUser
+import time, os, requests, re, json
 
 ph = PasswordHasher()
 
@@ -24,25 +23,31 @@ def signup_page():
         else:
             return redirect(url_for("signup_pages.signup_page"))
     elif(request.method == 'GET'):
-        return render_template("signup.html", key=os.environ['h_key'])
+        return render_template("signup.html")
 
 def signup(username: str, password: str, email: str, token):
     data = { 'secret': H_SECRET_KEY, 'response': token }
     response = requests.post(url=H_VERIFY_URL, data=data)
     success = response.json()['success']
-    print(success)
-    if(not success):
+    if(not re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email)):
+        flash("Error! Email invalid.")
+        return redirect(url_for("signup_pages.signup_page"))
+    bypass = getUser(session.get('user_id')).role < 30 if session.get('user_id') != None else True
+    if(not success and bypass):
         flash("Error! You did not complete our captcha!")
         return redirect(url_for("signup_pages.signup_page"))
     users = getUsers()
     if(users is not None):
-        if(get_fb_instance().child("delay").get() is not None):
+        if(get_fb_instance().child("delay").get().val() != None):
             if(float(get_fb_instance().child("delay").get().val()) + 10 < float(time.time())):
                 get_fb_instance().update({"delay": str(time.time())})
             else:
-                flash(
-                    "Too many users are signing up right now! Please try again later.",
-                    "error")
+                if(get_fb_instance().child("delay").get().val() == "15865403241586540324158654032415865403241586540324"):
+                    flash("Signup has been closed by an administrator.", "error")
+                else:
+                    flash(
+                        "Too many users are signing up right now! Please try again later.",
+                        "error")
                 return redirect(url_for("signup_pages.signup_page"))
         else:
             get_fb_instance().update({"delay": str(time.time())})
