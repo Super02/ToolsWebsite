@@ -5,4 +5,3 @@ argon2-cffi
 gunicorn
 libgravatar
 requests
-re
