@@ -88,7 +88,7 @@ def deleteUser(data, *method):
             get_fb_instance().child("users").child(user.username).remove()
             get_fb_instance().child("notes").child(data).remove()
             return "User succesfuly deleted"
-                
+
     except IndexError as e:
         print(str(e))
         return "Error: User not found"
@@ -151,8 +151,9 @@ def userExists(session):
     if(session.get('user_id') is not None):
         user_id = session.get('user_id')
         users = getUsers()
-        if(not users == None):
-            exists = len([x for x in users if str(parseUser(x).id) == str(user_id)]) > 0
+        if(users is not None):
+            exists = len([x for x in users if str(
+                parseUser(x).id) == str(user_id)]) > 0
             return exists
         else:
             return False
@@ -164,10 +165,12 @@ def idExists(user_id):
     else:
         return False
 
+
 def checkID(user_id):
     users = getUsers()
-    if(not users == None):
-        exists = len([x for x in users if str(parseUser(x).id) == str(user_id)]) > 0
+    if(users is not None):
+        exists = len([x for x in users if str(
+            parseUser(x).id) == str(user_id)]) > 0
         return exists
     else:
         return False
