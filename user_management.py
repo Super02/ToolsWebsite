@@ -36,14 +36,17 @@ def createUser(username, password, role, email, *id):
 def parseUser(data):  # Smarter implementation
     if(isinstance(data, str)):
         data = json.loads(data)
-        return User(
-            data["id"],
-            data["username"],
-            data["password"],
-            data["role"],
-            data["email"],
-            data["notes"],
-            data["deletable"])
+        try:
+            return User(
+                data["id"],
+                data["username"],
+                data["password"],
+                data["role"],
+                data["email"],
+                data["notes"],
+                data["deletable"])
+        except KeyError as e:
+            print("Error at line 39 in user_management " + str(e) + " with data: " + str(data))
     elif(isinstance(data, User)):
         return data
     elif(str(type(data)) == "<class 'pyrebase.pyrebase.Pyre'>"):

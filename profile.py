@@ -132,7 +132,7 @@ def notes(user_id):
                 'return') is not None:
             encoded = base64.b64encode(
                 request.form.get('notes').encode("utf-8")).decode()
-            if(encoded < 30000):
+            if(len(encoded) < 30000):
                 updateChild(user_id, "notes", encoded)
             else:
                 flash("Save error! Your document must not exceed 30,000 characters!")

@@ -35,8 +35,11 @@ def signup(username: str, password: str, email: str, token):
     data = {'secret': H_SECRET_KEY, 'response': token}
     response = requests.post(url=H_VERIFY_URL, data=data)
     success = response.json()['success']
-    if(not re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email)):
+    if(not re.match(r"^[a-zA-Z0-9_.+-]{1,70}@[a-zA-Z0-9-]{1,63}\.[a-zA-Z0-9-.]{2,3}$", email)):
         flash("Error! Email invalid.")
+        return redirect(url_for("signup_pages.signup_page"))
+    if(not re.match(r"^[a-zA-Z0-9_-]{1,32}$", username)):
+        flash("Error! Username invalid.")
         return redirect(url_for("signup_pages.signup_page"))
     bypass = getUser(session.get('user_id')).role < 30 if session.get(
         'user_id') is not None else True
@@ -61,6 +64,9 @@ def signup(username: str, password: str, email: str, token):
     if users is not None and [x for x in users if x.key().lower(
     ) == username.lower() or parseUser(x).email.lower() == email.lower()]:
         flash("Username or email already taken!", "error")
+        return redirect(url_for("signup_pages.signup_page"))
+    if(not re.match(r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", password)):
+        flash("Invalid password.", "error")
         return redirect(url_for("signup_pages.signup_page"))
     else:
         try:
