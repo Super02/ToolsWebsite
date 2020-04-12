@@ -113,7 +113,7 @@ def getRawUser(id):
 def updateUser(id, user_object):
     user = getUser(id)
     get_fb_instance().child("users").update(
-        {user.username: json.dumps(user_object.__dict__)})
+        {user.id: json.dumps(user_object.__dict__)})
 
 
 def updateChild(key, child, data):

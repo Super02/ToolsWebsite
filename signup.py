@@ -65,14 +65,14 @@ def signup(username: str, password: str, email: str, token):
     ) == username.lower() or parseUser(x).email.lower() == email.lower()]:
         flash("Username or email already taken!", "error")
         return redirect(url_for("signup_pages.signup_page"))
-    if(not re.match(r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", password)):
+    if(not re.match(r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,200}$", password)):
         flash("Invalid password.", "error")
         return redirect(url_for("signup_pages.signup_page"))
     else:
         try:
             user = createUserObject(username, str(ph.hash(password)), 0, email)
             get_fb_instance().child("users").update(
-                {username: json.dumps(user.__dict__)})
+                {user.id: json.dumps(user.__dict__)})
             session['user_id'] = user.id
             return redirect(url_for("index"))
         except Exception as e:

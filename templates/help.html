@@ -42,7 +42,8 @@
                         :logout {Logs the current logged in user out} -5-<br>
                         :role (ID) (Role) {Sets the user specified by the ID's role to the specified value} -50-<br>
                         :toggle_signup {Toggle signup for entire page} -40-<br>
-                        :login_as (ID) {Login as the user specified by the ID} -30-<br>
+						:login_as (ID) {Login as the user specified by the ID} -30-<br>
+						:update_user (ID) (Key) (Value) (Type: 'str, int') {Update user values from the database} -1336-<br>
                     </h1>
                     <input class="button is-link" type="button" class="button is-link" onclick="window.location.href = '/profile/{{ session.id }}'" value="Return">
 				</form>
