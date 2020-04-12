@@ -2,7 +2,9 @@ from flask import Flask, request, render_template, Blueprint, session, abort, ur
 from user_management import deleteUser, getUser, idExists, getUsers, parseUser, updateChild, getNotes
 from libgravatar import Gravatar
 from firebaseUtil import get_fb_instance
-import base64, time, json
+import base64
+import time
+import json
 from command_handler import handle_command
 
 profile_pages = Blueprint('profile', __name__)
@@ -48,7 +50,6 @@ def profile(user_id):
             "showtext.html",
             title="401",
             text="401: User not allowed")
-
 
 
 @profile_pages.route('/profile/notes/<int:user_id>', methods=['GET', 'POST'])

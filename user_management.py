@@ -46,7 +46,11 @@ def parseUser(data):  # Smarter implementation
                 data["notes"],
                 data["deletable"])
         except KeyError as e:
-            print("Error at line 39 in user_management " + str(e) + " with data: " + str(data))
+            print(
+                "Error at line 39 in user_management " +
+                str(e) +
+                " with data: " +
+                str(data))
     elif(isinstance(data, User)):
         return data
     elif(str(type(data)) == "<class 'pyrebase.pyrebase.Pyre'>"):

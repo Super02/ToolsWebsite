@@ -1,9 +1,11 @@
 from flask import flash, jsonify, session, redirect, url_for, render_template
 from user_management import deleteUser, get_fb_instance, createUserObject, createID, getUser, updateUser, parseUser, getUsers, checkID
-import json, asyncio
+import json
+import asyncio
 from argon2 import PasswordHasher
 
 ph = PasswordHasher()
+
 
 def handle_command(command, user):  # Make sure returns.
     if(command[0][0] == ":"):
@@ -72,8 +74,10 @@ def handle_command(command, user):  # Make sure returns.
             if(len(command) > 3):
                 if(checkID(command[1])):
                     user = getUser(command[1])
-                    _type=command[4] if len(command) > 4 else "str"
-                    setattr(user, command[2], int(command[3]) if _type == "int" else command[3])
+                    _type = command[4] if len(command) > 4 else "str"
+                    setattr(
+                        user, command[2], int(
+                            command[3]) if _type == "int" else command[3])
                     updateUser(command[1], user)
                 else:
                     flash("User not found", "error")
