@@ -31,7 +31,7 @@
 					<div class="field">
 						<label class="label">Email</label>
 						<p class="control has-icons-left">
-						  <input class="input" type="text" name="email" placeholder="Email">
+						  <input class="input" pattern="^[a-zA-Z0-9_.+-]{1,70}@[a-zA-Z0-9-]{1,63}\.[a-zA-Z0-9-.]{2,3}$" maxlength="345" type="text" name="email" placeholder="Email">
 						  <span class="icon is-small is-left">
 							<i class="fas fa-user"></i>
 						  </span>
@@ -41,7 +41,7 @@
 				  <div class="field">
 					<label class="label">Username</label>
 					<div class="control has-icons-left has-icons-right">
-					  <input class="input" type="text" name="username" placeholder="Username">
+					  <input class="input" pattern="^[a-zA-Z0-9_-]{1,32}$" maxlength="32" type="text" name="username" placeholder="Username">
 					  <span class="icon is-small is-left">
 						<i class="fas fa-user"></i>
 					  </span>
@@ -50,12 +50,16 @@
 				  <div class="field">
 					<label class="label">Password</label>
 					<p class="control has-icons-left">
-					  <input class="input" type="password" name="password" placeholder="Password">
+					  <input class="input" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,200}$" maxlength="200" type="password" name="password" placeholder="Password">
 					  <span class="icon is-small is-left">
 						<i class="fas fa-lock"></i>
 					  </span>
 					</p>
 				  </div>
+				  <form method="POST">
+					<div class="h-captcha" data-sitekey="c369e67e-a5e1-4482-bef6-a11df9d12dc4"></div>
+					<script src="https://hcaptcha.com/1/api.js" async defer></script>
+				  </form>
 				  <div class="field">
 					<p class="control">
 					  <button type="submit" class="button is-success">

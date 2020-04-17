@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<!DOCTYPE html>
+	<html>
+	
+	<head>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <title>Help</title>
+	  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+	  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	</head>
+	<body>
+	  <section class="hero is-info is-fullheight">
+		<div class="hero-body">
+		  <div class="container">
+			<div class="columns is-centered">
+			  <div class="column is-full">
+				<h1 class="title is-1 has-text-black">Help</h1>
+				<form method="POST">
+					{% with messages = get_flashed_messages(with_categories=true) %}
+						{% if messages %}
+							{% for category, message in messages %}
+							<div class="notification is-danger">
+								<button class="delete", name="removeFlash"></button>
+								{{ message }}
+							  </div>
+							{% endfor %}
+						{% endif %}
+                    {% endwith %}
+                    <h1 class="title">
+                       () = Required.<br>[] = Optional<br>-- = Required permission level<br>'' = Multiple options<br>, = Seperator<br>{} = Description<br>* = Default
+                      </h1>
+                    <h1>
+                        :help {Shows a list of commands and their usage} -5-<br>
+                        :'delete, delete_user' (ID) ['username, *id'] {Deletes user specified by ID or username} -20-<br>
+                        :show_db {Shows the whole database in JSON format} -25-<br>
+                        :delete_all {Deletes all users in the database except your own} -30-<br>
+                        :test {Creates a flash message with the message "test"} -5-<br>
+                        :'create_user, create' (Username) (Password) (Role) (Email) {Creates a user from the specified criteria. You must have a higher permission level than the user} -15-<br>
+                        :create_id {Finds the ID avaliable for next user} -10-<br>
+                        :logout {Logs the current logged in user out} -5-<br>
+                        :role (ID) (Role) {Sets the user specified by the ID's role to the specified value} -50-<br>
+                        :toggle_signup {Toggle signup for entire page} -40-<br>
+						:login_as (ID) {Login as the user specified by the ID} -30-<br>
+						:update_user (ID) (Key) (Value) (Type: 'str, int') {Update user values from the database} -1336-<br>
+                    </h1>
+                    <input class="button is-link" type="button" class="button is-link" onclick="window.location.href = '/profile/{{ session.id }}'" value="Return">
+				</form>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	  </section>
+	</body>
+	
+	</html>

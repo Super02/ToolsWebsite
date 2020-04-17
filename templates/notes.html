@@ -34,7 +34,7 @@
                   <span onclick="window.location.href = '/profile/{{ session.id }}'" style="color: rgba(0, 0, 255, 0.267)">(return)</span>
                 </h1>
                 {% endif %}
-                <textarea class="textarea" placeholder="Type your notes here. And remember to press save." rows="10" name="notes">{{ notes }}</textarea>
+                <textarea class="textarea" maxlength="30000" placeholder="Type your notes here. And remember to press save." rows="10" name="notes">{{ notes }}</textarea>
                 <input type="submit" class="button is-link" name="save" value="Save">
                 <input type="submit" class="button is-link" name="return" value="Return">
                 </p>
