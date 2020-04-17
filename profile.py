@@ -3,7 +3,10 @@ from flask import current_app as app
 from user_management import deleteUser, getUser, idExists, getUsers, parseUser, updateChild, getNotes
 from libgravatar import Gravatar
 from firebaseUtil import get_fb_instance
-import base64, json, time, requests
+import base64
+import json
+import time
+import requests
 from command_handler import handle_command
 
 
@@ -85,4 +88,3 @@ def notes(user_id):
                     notes=getNotes(user_id),
                     session=getUser(
                         session['user_id']))
-
