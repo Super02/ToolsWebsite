@@ -38,7 +38,7 @@ def signup(username: str, password: str, email: str):
                 return redirect(url_for("signup_pages.signup_page"))
         else:
             get_fb_instance().update({"delay": str(time.time())})
-    if users is not None and [x for x in users if x.key().lower(
+    if users is not None and [x for x in users if parseUser(x).username.lower(
     ) == username.lower() or parseUser(x).email.lower() == email.lower()]:
         flash("Username or email already taken!", "error")
         return redirect(url_for("signup_pages.signup_page"))
