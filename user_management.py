@@ -123,8 +123,8 @@ def updateChild(key, child, data):
 
 def createID():  # Fix session hangaround with deleted ID and jump to new users bug.
     if(getUsers() is not None):
-        users=getUsers()
-        ID = len(users)-2
+        users = getUsers()
+        ID = len(users) - 2
         taken = True
         while taken:
             ID += 1

@@ -1,5 +1,7 @@
 from flask import Flask, request, render_template, session, redirect, url_for
-import dotenv, os, requests
+import dotenv
+import os
+import requests
 from login import login_pages
 from signup import signup_pages
 from user_management import parseUser, getUsers, userExists
@@ -44,23 +46,40 @@ def index():
         return redirect(url_for('login_pages.login_page'))
 
 
-
-@app.route('/profile/corona/<int:user_id>', methods=['GET', 'POST']) # Move to profile blueprint
+@app.route(
+    '/profile/corona/<int:user_id>',
+    methods=[
+        'GET',
+        'POST'])  # Move to profile blueprint
 def corona_page(user_id):
     BASE_URL = "https://pomber.github.io/covid19/timeseries.json"
-    countries = ["Denmark", "Norway", "Sweden", "US", "Italy", "China", "Spain"]
+    countries = [
+        "Denmark",
+        "Norway",
+        "Sweden",
+        "US",
+        "Italy",
+        "China",
+        "Spain"]
     r = requests.get(BASE_URL).json()
     datalength = len([x["date"] for x in r[countries[0]]])
-    full=False
+    full = False
 
-    zoom=session.get('zoom') if session.get('zoom') != None else 31
+    zoom = session.get('zoom') if session.get('zoom') is not None else 31
     if request.method == "POST":
-        if(request.form.get("slider") != None):
+        if(request.form.get("slider") is not None):
             zoom = int(request.form.get("slider"))
-        if(request.form.get("fulldata") != None):
-            full=True
-    dates = [x["date"] for x in r[countries[0]]][-zoom:] # Make sure if length is not the same to: Improve to find date of longest country data
-    corona_chart = MaterialLineChart("corona", options={"title": "Corona chart", "width": 1200, "height": 800})
+        if(request.form.get("fulldata") is not None):
+            full = True
+    # Make sure if length is not the same to: Improve to find date of longest
+    # country data
+    dates = [x["date"] for x in r[countries[0]]][-zoom:]
+    corona_chart = MaterialLineChart(
+        "corona",
+        options={
+            "title": "Corona chart",
+            "width": 1200,
+            "height": 800})
     corona_chart.add_column("string", "Date")
     for country in countries:
         corona_chart.add_column("number", country)
@@ -68,13 +87,19 @@ def corona_page(user_id):
         row_data = [date]
         for country in countries:
             if(full != True):
-                row_data.append([j["deaths"]-x["deaths"] for x,j in zip(r[country], r[country][1:])][-zoom:][i])
+                row_data.append([j["deaths"] - x["deaths"]
+                                 for x, j in zip(r[country], r[country][1:])][-zoom:][i])
             else:
                 row_data.append([x["deaths"] for x in r[country]][-zoom:][i])
         corona_chart.add_rows([row_data])
     charts.register(corona_chart)
     session['zoom'] = zoom
-    return render_template('corona_page.html', datalength=datalength-2, zoom=zoom, countries=countries)
+    return render_template(
+        'corona_page.html',
+        datalength=datalength - 2,
+        zoom=zoom,
+        countries=countries)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', use_reloader=True)
