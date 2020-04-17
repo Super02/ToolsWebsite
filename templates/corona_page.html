@@ -11,6 +11,7 @@
 <body>
 	<form name="update-graph" method="POST">
   <div class="slidecontainer">
+    <input type="submit" class="button is-info" name="fulldata" id="fulldata" value="Show total deaths">
     <input type="range" min="2" max={{datalength}} value="{{zoom}}" class="slider" id="myRange" name="slider">
       <div class="days">
         <p>Antal dage: <span id="demo"></span></p>
@@ -25,6 +26,7 @@ var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
 output.innerHTML = slider.value
 slider.onclick = function(){document.getElementsByName("update-graph")[0].submit()}
+document.getElementById("full data").onclick = function(){document.getElementsByName("update-graph")[0].submit()}
 slider.oninput = function() {
   output.innerHTML = this.value;
 }

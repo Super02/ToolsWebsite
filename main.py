@@ -51,11 +51,14 @@ def corona_page(user_id):
     countries = ["Denmark", "Norway", "Sweden", "US", "Italy", "China", "Spain"]
     r = requests.get(BASE_URL).json()
     datalength = len([x["date"] for x in r[countries[0]]])
-
+    full=False
 
     zoom=session.get('zoom') if session.get('zoom') != None else 31
     if request.method == "POST":
-        zoom = int(request.form.get("slider"))
+        if(request.form.get("slider") != None):
+            zoom = int(request.form.get("slider"))
+        if(request.form.get("fulldata") != None):
+            full=True
     dates = [x["date"] for x in r[countries[0]]][-zoom:] # Make sure if length is not the same to: Improve to find date of longest country data
     corona_chart = MaterialLineChart("corona", options={"title": "Corona chart", "width": 1200, "height": 800})
     corona_chart.add_column("string", "Date")
@@ -64,7 +67,10 @@ def corona_page(user_id):
     for i, date in enumerate(dates):
         row_data = [date]
         for country in countries:
-            row_data.append([j["deaths"]-x["deaths"] for x,j in zip(r[country], r[country][1:])][-zoom:][i])
+            if(full != True):
+                row_data.append([j["deaths"]-x["deaths"] for x,j in zip(r[country], r[country][1:])][-zoom:][i])
+            else:
+                row_data.append([x["deaths"] for x in r[country]][-zoom:][i])
         corona_chart.add_rows([row_data])
     charts.register(corona_chart)
     session['zoom'] = zoom
