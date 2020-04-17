@@ -15,14 +15,12 @@ class User:
             password: str,
             role: int,
             email: str,
-            notes: str,
             deletable: bool):
         self.id = id
         self.username = username
         self.password = password
         self.role = role
         self.email = email
-        self.notes = notes
         self.deletable = deletable
 
     def __repr__(self):
@@ -43,7 +41,6 @@ def parseUser(data):  # Smarter implementation
                 data["password"],
                 data["role"],
                 data["email"],
-                data["notes"],
                 data["deletable"])
         except KeyError as e:
             print(
@@ -66,9 +63,9 @@ def parseUser(data):  # Smarter implementation
 def createUserObject(username, password, role: int, email, *id):
     ID = createID()
     if(len(id) == 0):
-        return User(int(ID), username, password, int(role), email, "", True)
+        return User(ID, username, password, int(role), email, True)
     else:
-        return User(int(id[0]), username, password, int(role), email, "", True)
+        return User(id[0], username, password, int(role), email, True)
 
 
 def getUsers():
@@ -84,7 +81,7 @@ def deleteUser(data, *method):
             user = parseUser(user)
             if(not user.deletable):
                 return "Error! User protected from deletion."
-            get_fb_instance().child("users").child(user.username).remove()
+            get_fb_instance().child("users").child(user.id).remove()
             get_fb_instance().child("notes").child(user.id).remove()
             return "User succesfuly deleted"
         elif(method[0] == "id"):
@@ -92,7 +89,7 @@ def deleteUser(data, *method):
             user = parseUser(user)
             if(not user.deletable):
                 return "Error! User protected from deletion."
-            get_fb_instance().child("users").child(user.username).remove()
+            get_fb_instance().child("users").child(user.id).remove()
             get_fb_instance().child("notes").child(data).remove()
             return "User succesfuly deleted"
 
@@ -126,11 +123,10 @@ def updateChild(key, child, data):
 
 def createID():  # Fix session hangaround with deleted ID and jump to new users bug.
     if(getUsers() is not None):
-        ID = -1
-        if(getUsers() is not None):
-            ID = len(getUsers())
-        taken = "1"
-        while len(taken) > 0:
+        users=getUsers()
+        ID = len(users)-2
+        taken = True
+        while taken:
             ID += 1
             taken = [x for x in getUsers() if parseUser(x).id == ID]
         return ID

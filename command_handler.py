@@ -84,7 +84,7 @@ def handle_command(command, user):  # Make sure returns.
     return redirect(url_for('profile.profile', user_id=user.id))
 
 
-async def delete_all(user_id):
+def delete_all(user_id):
     for x in getUsers():
         if(parseUser(x).id != int(user_id)):
             deleteUser(parseUser(x).username)

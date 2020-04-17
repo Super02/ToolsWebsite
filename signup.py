@@ -72,7 +72,7 @@ def signup(username: str, password: str, email: str, token):
         try:
             user = createUserObject(username, str(ph.hash(password)), 0, email)
             get_fb_instance().child("users").update(
-                {user.id: json.dumps(user.__dict__)})
+                {str(user.id): json.dumps(user.__dict__)})
             session['user_id'] = user.id
             return redirect(url_for("index"))
         except Exception as e:
