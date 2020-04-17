@@ -1,11 +1,11 @@
 from flask import Flask, request, render_template, Blueprint, session, abort, url_for, redirect, flash, jsonify
+from flask import current_app as app
 from user_management import deleteUser, getUser, idExists, getUsers, parseUser, updateChild, getNotes
 from libgravatar import Gravatar
 from firebaseUtil import get_fb_instance
-import base64
-import time
-import json
+import base64, json, time, requests
 from command_handler import handle_command
+
 
 profile_pages = Blueprint('profile', __name__)
 
@@ -18,6 +18,8 @@ def profile(user_id):
             return redirect(url_for('login_pages.login_page'))
         elif request.form.get('notes') is not None:
             return redirect(url_for('profile.notes', user_id=user_id))
+        elif request.form.get('coronadata') is not None:
+            return redirect(url_for('corona_page', user_id=user_id))
         elif request.form.get('removeFlash') is not None:
             return redirect(url_for("profile.profile", user_id=user_id))
         elif request.form.get('delete_user'):
@@ -83,3 +85,4 @@ def notes(user_id):
                     notes=getNotes(user_id),
                     session=getUser(
                         session['user_id']))
+
