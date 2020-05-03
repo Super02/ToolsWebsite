@@ -6,3 +6,4 @@ gunicorn
 libgravatar
 requests
 flask_googlecharts
+nexmo
