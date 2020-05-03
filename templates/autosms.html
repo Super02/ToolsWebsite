@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Autosms</title>
+    <meta name="description" content="An app for creating scheduled sms'es">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Contact-Form-Clean.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightpick@1.3.4/css/lightpick.min.css">
+</head>
+
+<body id="page-top">
+    <header class="masthead" style="background-image:url('{{ url_for('static', filename='assets/img/intro-bg.jpg')}}');">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <h1 class="brand-heading">axelsms</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="contact-clean">
+        <form method="post">
+            <h2 class="text-center">Autosms settings</h2>
+            <div class="form-group"><input class="form-control" type="text" name="src" placeholder="Source"></div>
+            <div class="form-group"><input class="form-control" type="tel" placeholder="Destination" name="dst"></div>
+            <div class="form-group"><textarea class="form-control" name="message" placeholder="Message" rows="14"></textarea></div>
+            <div class="form-group"><select class="form-control" name="repeat"><option value="1" selected="">Repeat every day</option><option value="7">Repeat every week</option><option value="14">Repeat every month</option><option value="14">Repeat every year</option><option value="-1" selected="">Never repeat</option></select></div>
+            <div
+                class="form-group"><input class="form-control" type="text" name="date" id="datePicker"></div>
+    <div class="form-group"><button class="btn btn-primary" type="submit">save &amp; send</button></div>
+    </form>
+    </div>
+    <div class="map-clean"></div>
+    <footer>
+        <div class="container text-center">
+            <p>Copyright © Super02 2020</p>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='assets/js/jquery.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightpick@1.3.4/lightpick.min.js"></script>
+    <script src="{{ url_for('static', filename='assets/js/datepicker.js')}}"></script>
+</body>
+
+</html> 

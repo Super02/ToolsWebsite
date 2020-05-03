@@ -28,6 +28,8 @@ def profile(user_id):
         elif request.form.get('delete_user'):
             flash(deleteUser(user_id, "id"), "error")
             return redirect(url_for("index"))
+        elif request.form.get('autosms'):
+            return redirect(url_for('autosms.auto_sms'))
         elif request.form.get('execute') is not None:
             user = getUser(session['user_id'])
             command = request.form.get('command').split(" ")

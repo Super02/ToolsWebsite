@@ -42,7 +42,7 @@ def signup(username: str, password: str, email: str, token):
         flash("Error! Username invalid.")
         return redirect(url_for("signup_pages.signup_page"))
     bypass = getUser(session.get('user_id')).role < 30 if session.get(
-        'user_id') is not None else True
+        'user_id') is not None else False
     if(not success and bypass):
         flash("Error! You did not complete our captcha!")
         return redirect(url_for("signup_pages.signup_page"))
