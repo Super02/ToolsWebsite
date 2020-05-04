@@ -1,5 +1,9 @@
 from flask import Flask, request, render_template, session, redirect, url_for
-import dotenv, os, requests, nexmo, json
+import dotenv
+import os
+import requests
+import nexmo
+import json
 from login import login_pages
 from signup import signup_pages
 from user_management import parseUser, getUsers, userExists, get_fb_instance, updateRawChild
@@ -15,8 +19,11 @@ app.register_blueprint(profile_pages)
 app.register_blueprint(autosms)
 charts = GoogleCharts(app)
 
-client = nexmo.Client(key=os.environ['nexmo_key'], secret=os.environ['nexmo_secret'])
+client = nexmo.Client(
+    key=os.environ['nexmo_key'],
+    secret=os.environ['nexmo_secret'])
 app.secret_key = os.environ['app_key']
+
 
 def checkSMS():
     for x in get_fb_instance().child("smses").get().each():
@@ -24,9 +31,12 @@ def checkSMS():
             print(x.val())
             # messsage = client.send_message({'from': x.val()["pending"]["src"], 'to': "45" + x.val()["pending"]["dst"], 'text': x.val()["pending"]["message"]})
             # print(messsage)
-            updateRawChild("smses", "smses/{}".format(session.get("user_id")), x.val()["smses"]-1)
+            updateRawChild("smses",
+                           "smses/{}".format(session.get("user_id")),
+                           x.val()["smses"] - 1)
             if(x.val()["pending"]["repeat"] == "-1"):
                 get_fb_instance().child("smses/{}/pending".format(x.key())).remove()
+
 
 @app.before_request
 def before_request_func():

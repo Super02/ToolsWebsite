@@ -119,7 +119,8 @@ def updateUser(id, user_object):
 
 def updateChild(key, child, data):
     get_fb_instance().child(child).update({key: json.dumps(data)})
-    
+
+
 def updateRawChild(key, child, data):
     get_fb_instance().child(child).update({key: data})
 
@@ -135,6 +136,8 @@ def createID():  # Fix session hangaround with deleted ID and jump to new users 
         return ID
     else:
         return 0
+
+
 def getUserSmSes(id):
     try:
         smses = get_fb_instance().child("smses/{}/smses/".format(id)).get().val()
@@ -144,6 +147,7 @@ def getUserSmSes(id):
             return None
     except IndexError:
         return None
+
 
 def getNotes(id):
     try:
