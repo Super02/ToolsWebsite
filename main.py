@@ -32,6 +32,7 @@ app.secret_key = os.environ['app_key']
 
 def checkSMS():
     for x in get_fb_instance().child("smses").get().each():
+        if(x == None): pass
         pending = x.val()["pending"]
         date = datetime.strptime(pending["date"], "%dth %B %Y").date()
         now = datetime.now().date()
