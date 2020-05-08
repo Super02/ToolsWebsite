@@ -37,24 +37,42 @@ def checkSMS():
         now = datetime.now().date()
         if(now == date):
             print(x.val())
-            messsage = client.send_message({'from': x.val()["pending"]["src"], 'to': "45" + x.val()["pending"]["dst"], 'text': x.val()["pending"]["message"]})
+            messsage = client.send_message(
+                {
+                    'from': x.val()["pending"]["src"],
+                    'to': "45" + x.val()["pending"]["dst"],
+                    'text': x.val()["pending"]["message"]})
             print(messsage)
-            updateRawChild("smses","smses/{}".format(x.key()), x.val()["smses"] - 1)
+            updateRawChild("smses",
+                           "smses/{}".format(x.key()),
+                           x.val()["smses"] - 1)
             if(pending["repeat"] == "-1"):
                 get_fb_instance().child("smses/{}/pending".format(x.key())).remove()
                 print("Message sent")
             else:
-                updateRawChild("date","smses/{}/pending".format(x.key()), datetime.strftime(date + timedelta(days=int(pending["repeat"])), "%dth %B %Y"))
+                updateRawChild(
+                    "date",
+                    "smses/{}/pending".format(
+                        x.key()),
+                    datetime.strftime(
+                        date +
+                        timedelta(
+                            days=int(
+                                pending["repeat"])),
+                        "%dth %B %Y"))
                 print("Message sent and next message scheduled.")
+
 
 scheduler.add_job(func=checkSMS, trigger="interval", hours=1)
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 
+
 @app.route('/api/check/sms', methods=["POST"])
 def smsCheckApi():
     checkSMS()
     return "200 Sucess", 200
+
 
 @app.before_request
 def before_request_func():

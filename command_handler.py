@@ -83,7 +83,9 @@ def handle_command(command, user):  # Make sure returns.
                     flash("User not found", "error")
         elif(command[0] == "setsms" or command[0] == "set_sms" and user.role > 1336):
             if(len(command) > 2):
-                updateRawChild("smses", "smses/{}".format(int(command[1])), int(command[2]))
+                updateRawChild("smses",
+                               "smses/{}".format(int(command[1])),
+                               int(command[2]))
                 flash("Sucess!")
 
     return redirect(url_for('profile.profile', user_id=user.id))
