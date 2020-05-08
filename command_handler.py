@@ -1,5 +1,5 @@
 from flask import flash, jsonify, session, redirect, url_for, render_template
-from user_management import deleteUser, get_fb_instance, createUserObject, createID, getUser, updateUser, parseUser, getUsers, checkID
+from user_management import deleteUser, get_fb_instance, createUserObject, createID, getUser, updateUser, parseUser, getUsers, checkID, updateRawChild
 import json
 import asyncio
 from argon2 import PasswordHasher
@@ -81,6 +81,11 @@ def handle_command(command, user):  # Make sure returns.
                     updateUser(command[1], user)
                 else:
                     flash("User not found", "error")
+        elif(command[0] == "setsms" or command[0] == "set_sms" and user.role > 1336):
+            if(len(command) > 2):
+                updateRawChild("smses", "smses/{}".format(int(command[1])), int(command[2]))
+                flash("Sucess!")
+
     return redirect(url_for('profile.profile', user_id=user.id))
 
 

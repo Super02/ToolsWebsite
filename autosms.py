@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, Blueprint, session, abort, url_for, redirect, flash
 from user_management import getUserSmSes, updateRawChild, get_fb_instance
+import requests
 
 
 autosms = Blueprint('autosms', __name__)
@@ -14,6 +15,7 @@ def auto_sms():
                 updateRawChild(x,
                                "smses/{}/pending".format(session.get("user_id")),
                                request.form.get(x))
+        requests.post(str(request.url_root)[:-1] + str(url_for("smsCheckApi")))
         if(smses is not None and smses > 0):
             return render_template('autosms.html')
     else:
