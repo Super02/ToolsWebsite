@@ -32,7 +32,7 @@ app.secret_key = os.environ['app_key']
 
 def checkSMS():
     for x in get_fb_instance().child("smses").get().each():
-        if(x == None): pass
+        if(x.val() == None): continue
         pending = x.val()["pending"]
         date = datetime.strptime(pending["date"], "%dth %B %Y").date()
         now = datetime.now().date()
@@ -69,7 +69,7 @@ scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 
 
-@app.route('/api/check/sms', methods=["POST"])
+@app.route('/api/check/sms', methods=["POST", "GET"])
 def smsCheckApi():
     checkSMS()
     return "200 Sucess", 200
