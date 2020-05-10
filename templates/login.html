@@ -19,15 +19,19 @@
 			<h1 class="title is-1 has-text-black">Login</h1>
             <form method="POST">
               {% with messages = get_flashed_messages(with_categories=true) %}
-						{% if messages %}
-							{% for category, message in messages %}
-							<div class="notification is-danger">
-								<button class="delete", name="removeFlash"></button>
-								{{ message }}
-							  </div>
-							{% endfor %}
-						{% endif %}
-					{% endwith %}
+          {% if messages %}
+            {% for category, message in messages %}
+            {% if category == "error" %}
+            <div class="notification is-danger">
+              {%else%}
+              <div class="notification is-primary">
+                {%endif%}
+              <button class="delete", name="removeFlash"></button>
+              {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
               <div class="field">
                 <label class="label">Username or email</label>
                 <div class="control has-icons-left has-icons-right">
@@ -50,8 +54,9 @@
                 <p class="control">
                   <button type="submit" name="login" class="button is-success">
                     Login
-				  </button>
-				  <input type="button" class="button is-link" onclick="window.location.href = '/signup'" value="Signup instead">
+          </button>
+          <a href="forgot">Forgot Password?</a>
+          <input type="button" class="button is-link" onclick="window.location.href = '/signup'" value="Signup instead">
                 </p>
               </div>
             </form>
