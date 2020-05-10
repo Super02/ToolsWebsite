@@ -5,7 +5,9 @@ import pyrebase
 from json import JSONDecodeError
 import time
 import base64
-
+import smtplib
+import imghdr, os
+from email.message import EmailMessage
 
 class User:
     def __init__(
@@ -192,3 +194,25 @@ def checkID(user_id):
         return exists
     else:
         return False
+
+
+def sendEmailToUser(user_id, subject, message):
+    user = getUser(user_id)
+    sender = os.environ["email_address"]
+    password = os.environ["email_password"]
+    receiever = user.email
+    port = os.environ["email_port"]
+    host = os.environ["email_host"]
+
+    msg = EmailMessage()
+    msg['Subject'] = subject
+    msg['From'] = sender
+    msg['To'] = receiever
+
+    msg.set_content('This is a plain text email')
+    msg.add_alternative(message, subtype='html')
+
+
+    with smtplib.SMTP_SSL(host, port) as smtp:
+        smtp.login(sender, password)
+        smtp.send_message(msg)

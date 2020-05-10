@@ -18,6 +18,19 @@
 <body>
     <div class="login-dark">
         <form method="post">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+            {% if category == "error" %}
+            <div class="alert alert-danger" role="alert">
+              {%else%}
+              <div class="alert alert-success" role="alert">
+                {%endif%}
+              {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
             <h2 class="sr-only">Reset password</h2>
             <div class="illustration"><i class="icon ion-ios-locked-outline"></i></div>
             <div class="form-group"><input class="form-control" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,200}$" maxlength="200" type="password" name="password" placeholder="Password"></div>

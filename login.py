@@ -2,13 +2,14 @@ from flask import Flask, request, render_template, Blueprint, session, abort, ur
 from firebaseUtil import get_fb_instance
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
-from user_management import parseUser, getUsers, updateRawChild, updateUser
+from user_management import parseUser, getUsers, updateRawChild, updateUser, sendEmailToUser
 import json, uuid, time, re, requests, os
 
 ph = PasswordHasher()
 
 H_SECRET_KEY = os.environ['h_secret']
 H_VERIFY_URL = "https://hcaptcha.com/siteverify"
+cooldown = time.time()
 
 login_pages = Blueprint('login_pages', __name__)
 
@@ -19,7 +20,7 @@ def forgot():
         response = requests.post(url=H_VERIFY_URL, data=data)
         success = response.json()['success']
         if(not success):
-            flash("You did not complete our captcha!")
+            flash("You did not complete our captcha!", "error")
             return render_template("forgot_password.html")
         email = request.form.get("email")
         sendResetEmail(email)
@@ -37,10 +38,14 @@ def sendResetEmail(email):
         user=parseUser(user[0])
         UUID = str(uuid.uuid3(uuid.NAMESPACE_DNS, email)) + str(uuid.uuid4()) + "--" + str(epoch+900)
         updateRawChild(user.id, "userdata/reset", UUID)
+        f = open("templates/resetemailResponse.html", "r") 
+        sendEmailToUser(user.id, "Password reset", f.read().replace("{USER}", user.username).replace("{LINK}", request.url_root + "reset/" + UUID))
     
 
 @login_pages.route('/reset/<token>', methods=['POST', 'GET'])
 def reset_user(token):
+    if(get_fb_instance().child("userdata/reset").get().each() == None):
+        abort(403, "Token expired or does not exist")
     if(request.method == 'POST'):
         user = [x for x in get_fb_instance().child("userdata/reset").get().each() if x.val() == str(token)]
         try:
@@ -69,7 +74,7 @@ def reset_user(token):
 @login_pages.route('/login', methods=['GET', 'POST'])
 def login_page():
     if(request.method == 'POST'):
-        if request.form.get('removeFlash') is None:
+        if request.form.get('removeFlash') is None or request.form.get('removeFlash') == '':
             return login(
                 request.form['username_email'],
                 request.form['password'])

@@ -19,7 +19,7 @@ H_VERIFY_URL = "https://hcaptcha.com/siteverify"
 @signup_pages.route('/signup', methods=['GET', 'POST'])
 def signup_page():
     if(request.method == 'POST'):
-        if request.form.get('removeFlash') is None:
+        if request.form.get('removeFlash') is None or request.form.get('removeFlash') == '':
             return signup(
                 request.form['username'],
                 request.form['password'],
