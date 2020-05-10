@@ -6,8 +6,10 @@ from json import JSONDecodeError
 import time
 import base64
 import smtplib
-import imghdr, os
+import imghdr
+import os
 from email.message import EmailMessage
+
 
 class User:
     def __init__(
@@ -211,7 +213,6 @@ def sendEmailToUser(user_id, subject, message):
 
     msg.set_content('This is a plain text email')
     msg.add_alternative(message, subtype='html')
-
 
     with smtplib.SMTP_SSL(host, port) as smtp:
         smtp.login(sender, password)
