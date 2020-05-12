@@ -17,8 +17,10 @@ def auto_sms():
                                request.form.get(x))
         requests.post(str(request.url_root)[:-1] + str(url_for("smsCheckApi")))
         if(smses is not None and smses > 0):
-            print(get_fb_instance().child("smses/{}/pending".format(session.get("user_id"))).get().val()["date"])
-            return render_template('autosms.html', data=get_fb_instance().child("smses/{}/pending".format(session.get("user_id"))).get().val())
+            print(get_fb_instance().child(
+                "smses/{}/pending".format(session.get("user_id"))).get().val()["date"])
+            return render_template('autosms.html', data=get_fb_instance().child(
+                "smses/{}/pending".format(session.get("user_id"))).get().val())
     else:
         return render_template(
             "showtext.html",
