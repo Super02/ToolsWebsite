@@ -28,12 +28,12 @@
     <div class="contact-clean">
         <form method="post">
             <h2 class="text-center">Autosms settings</h2>
-            <div class="form-group"><input class="form-control" type="text" name="src" placeholder="Source"></div>
-            <div class="form-group"><input class="form-control" type="tel" placeholder="Destination" name="dst"></div>
-            <div class="form-group"><textarea class="form-control" name="message" placeholder="Message" rows="14"></textarea></div>
-            <div class="form-group"><select class="form-control" name="repeat"><option value="1" selected="">Repeat every day</option><option value="7">Repeat every week</option><option value="14">Repeat every month</option><option value="14">Repeat every year</option><option value="-1" selected="">Never repeat</option></select></div>
+            <div class="form-group"><input class="form-control" type="text" name="src" placeholder="Source" value="{{data["src"]}}"></div>
+            <div class="form-group"><input class="form-control" type="tel" placeholder="Destination" name="dst" value="{{data["dst"]}}"></div>
+            <div class="form-group"><textarea class="form-control" name="message" placeholder="Message" rows="14">{{data["message"]}}</textarea></div>
+            <div class="form-group"><select class="form-control" name="repeat"><option value="1">Repeat every day</option><option value="7" {%if data["repeat"] == "7"%}selected{%endif%}>Repeat every week</option><option value="14" {%if data["repeat"] == "14"%}selected{%endif%}>Repeat every month</option><option value="365" {%if data["repeat"] == "365"%}selected{%endif%}>Repeat every year</option><option value="-1" {%if data["repeat"] == "-1"%}selected{%endif%}>Never repeat</option></select></div>
             <div
-                class="form-group"><input class="form-control" type="text" name="date" id="datePicker"></div>
+                class="form-group"><input class="form-control" type="text" name="date" id="datePicker" value="{{data["date"]}}></div>
     <div class="form-group"><button class="btn btn-primary" type="submit">save &amp; send</button></div>
     </form>
     </div>
