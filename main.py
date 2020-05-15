@@ -65,7 +65,7 @@ def checkSMS():
                 print("Message sent and next message scheduled.")
 
 
-scheduler.add_job(func=checkSMS, trigger="interval", hours=1)
+scheduler.add_job(func=checkSMS, trigger="interval", minutes=15)
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 
