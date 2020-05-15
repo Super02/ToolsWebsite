@@ -31,6 +31,7 @@ app.secret_key = os.environ['app_key']
 
 
 def checkSMS():
+    print("Checking messages")
     for x in get_fb_instance().child("smses").get().each():
         if(x.val() is None):
             continue
