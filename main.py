@@ -38,8 +38,12 @@ def checkSMS():
         pending = x.val()["pending"]
         date = datetime.strptime(pending["date"], "%dth %B %Y").date()
         now = datetime.now()
-        if(now.date() == date and now.hour > 14):
-            print(x.val())
+        time = 13
+        try:
+            time = x.val()["pending"]["time"]
+        except Exception:
+            time = 13
+        if(now.date() == date and now.hour > time):
             messsage = client.send_message(
                 {
                     'from': "45" + x.val()["pending"]["src"],
