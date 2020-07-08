@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Hind&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+    <title>Todo List</title>
+</head>
+<body>
+    <header>
+        <h1>Todo List App</h1>
+    </header>
+    {% if user.id != session.id %}
+    <h1 class="title">
+        <center> <span onclick="window.location.href = '/profile/{{ session.id }}'" style="color: #00000021">{{ session.username }}, you are viewing this page as {{ user.username }}.</span> 
+      <span onclick="window.location.href = '/profile/{{ session.id }}'" style="color: rgba(0, 0, 255, 0.267)">(return)</span></center>
+    </h1>
+    {% endif %}
+    <form>
+        <input type="text" class="todoInput" placeholder="Todo">
+        <button class="todoButton" type="submit">
+            <i class="fas fa-plus-circle"></i>
+        </button>
+    </form>
+    <div class="todoItems">
+        <ul class="todoList"></ul>
+    </div>
+    <script src="{{ url_for('static', filename='js/buylist.js')}}"></script>
+</body>
+</html>

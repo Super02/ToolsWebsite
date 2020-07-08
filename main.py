@@ -10,6 +10,7 @@ from signup import signup_pages
 from user_management import parseUser, getUsers, userExists, get_fb_instance, updateRawChild
 from profile import profile_pages
 from autosms import autosms
+from buylist import buylist_pages
 from flask_googlecharts import GoogleCharts, MaterialLineChart
 import time
 import atexit
@@ -20,6 +21,7 @@ app.register_blueprint(login_pages)
 app.register_blueprint(signup_pages)
 app.register_blueprint(profile_pages)
 app.register_blueprint(autosms)
+app.register_blueprint(buylist_pages)
 charts = GoogleCharts(app)
 
 scheduler = BackgroundScheduler()
@@ -85,9 +87,9 @@ def smsCheckApi():
 def before_request_func():
     if(userExists(session) == False):
         session['user_id'] = None
-    if not request.is_secure:
-        url = request.url.replace('http://', 'https://', 1)
-        return redirect(url, code=301)
+    #if not request.is_secure and request.base_url != "localhost":
+        #url = request.url.replace('http://', 'https://', 1)
+        #return redirect(url, code=301)
 
 
 @app.route('/')
