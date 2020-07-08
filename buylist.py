@@ -14,8 +14,12 @@ def buylist_page(user_id):
             text="400: Post requests are denied")
     else:
         if(session.get('user_id') is not None):
-                if(session['user_id'] == user_id or getUser(session['user_id']).role > getUser(user_id).role):
-                    return render_template("buylist.html", user=getUser(user_id), session=getUser(session['user_id']))
+            if(session['user_id'] == user_id or getUser(session['user_id']).role > getUser(user_id).role):
+                return render_template(
+                    "buylist.html",
+                    user=getUser(user_id),
+                    session=getUser(
+                        session['user_id']))
         return render_template(
             "showtext.html",
             title="401",

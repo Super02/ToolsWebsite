@@ -16,7 +16,6 @@ H_SECRET_KEY = os.environ['h_secret']
 H_VERIFY_URL = "https://hcaptcha.com/siteverify"
 
 
-
 # SAVE DATA WHEN RELOADING PAGE
 
 
