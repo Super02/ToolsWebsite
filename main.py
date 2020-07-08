@@ -87,9 +87,9 @@ def smsCheckApi():
 def before_request_func():
     if(userExists(session) == False):
         session['user_id'] = None
-    #if not request.is_secure and request.base_url != "localhost":
-        #url = request.url.replace('http://', 'https://', 1)
-        #return redirect(url, code=301)
+    if not request.is_secure and request.base_url != "localhost":
+        url = request.url.replace('http://', 'https://', 1)
+        return redirect(url, code=301)
 
 
 @app.route('/')

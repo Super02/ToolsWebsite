@@ -16,6 +16,10 @@ H_SECRET_KEY = os.environ['h_secret']
 H_VERIFY_URL = "https://hcaptcha.com/siteverify"
 
 
+
+# SAVE DATA WHEN RELOADING PAGE
+
+
 @signup_pages.route('/signup', methods=['GET', 'POST'])
 def signup_page():
     if(request.method == 'POST'):
